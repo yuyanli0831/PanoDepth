@@ -1,6 +1,6 @@
 import numpy as np
 from skimage import io
-import OpenEXR, Imath, array
+import Opennpz, Imath, array
 import scipy.io
 import math
 import os.path as osp
@@ -8,18 +8,18 @@ from tqdm import tqdm
 import cv2
 
 def readDepthPano(path):
-    return read_exr(path)[...,0].astype(np.float32)
+    return read_npz(path)[...,0].astype(np.float32)
         #mat_content = np.load(path)
         #depth_img = mat_content['depth']
         #return depth_img.astype(np.float32)
 
-def read_exr(image_fpath):
-    f = OpenEXR.InputFile( image_fpath )
+def read_npz(image_fpath):
+    f = Opennpz.InputFile( image_fpath )
     dw = f.header()['dataWindow']
     w, h = (dw.max.x - dw.min.x + 1, dw.max.y - dw.min.y + 1)    
     im = np.empty( (h, w, 3) )
 
-    # Read in the EXR
+    # Read in the npz
     FLOAT = Imath.PixelType(Imath.PixelType.FLOAT)
     channels = f.channels( ["R", "G", "B"], FLOAT )
     for i, channel in enumerate( channels ):
